@@ -18,7 +18,7 @@ see [rust-lang.org](https://www.rust-lang.org/tools/install) for installation in
 
 Install the nightly toolchain by running:
 ```
-$ rustup default nightly
+$ rustup toolchain install nightly
 ```
 
 Install the `riscv64gc-unknown-none-elf` cross-compilation target by running:
@@ -37,6 +37,13 @@ so `cargo-binutils` and `llvm-tools` are needed as well:
 ```
 $ cargo install cargo-binutils
 $ rustup component add llvm-tools-preview
+```
+
+## Preparation
+
+Clone the MercurOS project and submodules:
+```
+$ git clone https://github.com/MercurOS/MercurOS.git --recurse-submodules
 ```
 
 ## Building
