@@ -1,0 +1,9 @@
+[submodule "maia"]
+	path = maia
+	url = https://github.com/MercurOS/maia
+[submodule "mercurius"]
+	path = mercurius
+	url = https://github.com/MercurOS/mercurius
+[submodule "tools"]
+	path = tools
+	url = https://github.com/MercurOS/tools
