@@ -83,8 +83,8 @@ function build_maia() {
     info "\nBuilding Maia..."
     export KERNEL="$MERCURIUS_OUT_PATH"
     run_build \
-        "$MERCURIUS_PATH" \
-        $CARGO_BUILD $CARGO_TARGET --features $TARGET
+        "$MAIA_PATH" \
+        $CARGO_BUILD $CARGO_TARGET
 }
 
 function build_tools() {
