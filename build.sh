@@ -3,6 +3,8 @@
 set -e
 
 TARGET="${1:-qemu}"
+CARGO_PROFILE="release"
+MAIA_DEBUG=""
 
 SCRIPT_ROOT="$(dirname "$(readlink -f "$0")")"
 
@@ -14,13 +16,20 @@ TOOLS_PATH="$SCRIPT_ROOT/tools"
 EFI_IMAGE="BOOTRISCV64.efi"
 MAKE_EFI="make-efi"
 
-MAIA_OUT_PATH="$MAIA_PATH/target/riscv64gc-unknown-none-elf/release/mercuros-maia"
-MERCURIUS_OUT_PATH="$MERCURIUS_PATH/target/riscv64gc-unknown-none-elf/release/mercuros-mercurius"
-MAKE_EFI_PATH="$TOOLS_PATH/target/release/$MAKE_EFI"
+if [ "$CARGO_PROFILE" == "release" ]; then
+    CARGO_FLAGS="--release"
+    CARGO_TARGET_PATH="release"
+else
+    CARGO_FLAGS=""
+    CARGO_TARGET_PATH="debug"
+fi
+
+MAIA_OUT_PATH="$MAIA_PATH/target/riscv64gc-unknown-none-elf/$CARGO_TARGET_PATH/mercuros-maia"
+MERCURIUS_OUT_PATH="$MERCURIUS_PATH/target/riscv64gc-unknown-none-elf/$CARGO_TARGET_PATH/mercuros-mercurius"
+MAKE_EFI_PATH="$TOOLS_PATH/target/$CARGO_TARGET_PATH/$MAKE_EFI"
 OUT_PATH="$IMAGE_PATH/$TARGET/$EFI_IMAGE"
 
 CARGO_BUILD="cargo build"
-CARGO_TARGET="--release"
 
 E_INVALID_ARGS=64
 E_BUILD_FAILED=65
@@ -76,7 +85,7 @@ function build_mercurius() {
     info "\nBuilding Mercurius..."
     run_build \
         "$MERCURIUS_PATH" \
-        $CARGO_BUILD $CARGO_TARGET --features $TARGET
+        $CARGO_BUILD $CARGO_FLAGS --features $TARGET
 }
 
 function build_maia() {
@@ -84,14 +93,15 @@ function build_maia() {
     export KERNEL="$MERCURIUS_OUT_PATH"
     run_build \
         "$MAIA_PATH" \
-        $CARGO_BUILD $CARGO_TARGET
+        $CARGO_BUILD $CARGO_FLAGS \
+        $([ ! -z "$MAIA_DEBUG" ] && echo "--features \"$MAIA_DEBUG\"")
 }
 
 function build_tools() {
     info "\nBuilding MercurOS build tools..."
     run_build \
         "$TOOLS_PATH" \
-        $CARGO_BUILD $CARGO_TARGET --bin $MAKE_EFI
+        $CARGO_BUILD $CARGO_FLAGS --bin $MAKE_EFI
 }
 
 function make_efi() {
