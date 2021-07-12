@@ -30,6 +30,14 @@ The boot process is as follows:
 
 ### Prerequisites
 
-To build a bootable disk image, you will need an U-Boot binary, and the
-MercurOS UEFI image (`BOOTRISCV64.efi`). Optionally, for U-Boot SPL, you will
-also need an OpenSBI binary.
+To build a bootable disk image, you will need the MercurOS UEFI image (`BOOTRISCV64.efi`).
+
+### Running the Image Creation Script
+
+To create the bootable image, run:
+```
+$ ./make_image.sh qemu
+```
+
+The resulting image can be mounted as a virtual hard disk device in QEMU, and booted
+via U-Boot.
